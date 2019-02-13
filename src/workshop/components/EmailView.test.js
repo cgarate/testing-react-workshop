@@ -1,27 +1,30 @@
-describe('prop rendering', () => {
-  describe('isSelected', () => {
-    it('includes "email-list-item--selected" class on container when `isSelected` prop is true', () => {
+import React from "react";
+import { mount } from "enzyme";
+import EmailView from "./EmailView";
+import { DEFAULT_EMAIL, READ_EMAIL } from "../../__fixtures__";
 
+describe("Tests render logic", () => {
+  describe("email", () => {
+    it('displays "mark read" button if email is unread', () => {
+      const component = mount(<EmailView email={DEFAULT_EMAIL} />);
+      const markReadButton = component.find(
+        '[data-test="email-mark-read-button"]',
+      );
+      expect(markReadButton).toExist();
     });
 
-
-    it('excludes "email-list-item--selected" class on container when `isSelected` prop is false', () => {
-
-    });
-  });
-
-  describe('email', () => {
-    it('includes "email-list-item--unread" class on container & hides "mark unread" button when `email.read` property is false', () => {
-
+    it("displays mark unread button if email is read", () => {
+      const component = mount(<EmailView email={READ_EMAIL} />);
+      const markUnreadButton = component.find(
+        '[data-test="email-mark-unread-button"]',
+      );
+      expect(markUnreadButton).toExist();
     });
 
-
-    it('excludes "email-list-item--unread" class on container & hides "mark unread" button when `email.read` property is true', () => {
-
-    });
-
-    it('includes "mark unread" button when both `email.read` property and `isSelected` prop are true', () => {
-
+    it("Does not encode HTML in the message", () => {
+      const component = mount(<EmailView email={DEFAULT_EMAIL} />);
+      const message = component.find('[data-test="email-message"]');
+      expect(message.html()).toContain("<br>");
     });
   });
 });
